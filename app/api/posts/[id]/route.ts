@@ -1,8 +1,8 @@
 
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { getAuthOptions } from '@/lib/auth'
+import { getPrisma } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
@@ -11,13 +11,13 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(getAuthOptions())
     
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const post = await prisma.post.findFirst({
+    const post = await getPrisma().post.findFirst({
       where: {
         id: params.id,
         userId: session.user.id
@@ -43,7 +43,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(getAuthOptions())
     
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -63,7 +63,7 @@ export async function PUT(
       offerTerms
     } = body
 
-    const post = await prisma.post.findFirst({
+    const post = await getPrisma().post.findFirst({
       where: {
         id: params.id,
         userId: session.user.id
@@ -74,7 +74,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Post not found' }, { status: 404 })
     }
 
-    const updatedPost = await prisma.post.update({
+    const updatedPost = await getPrisma().post.update({
       where: {
         id: params.id
       },
@@ -108,13 +108,13 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(getAuthOptions())
     
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const post = await prisma.post.findFirst({
+    const post = await getPrisma().post.findFirst({
       where: {
         id: params.id,
         userId: session.user.id
@@ -125,7 +125,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Post not found' }, { status: 404 })
     }
 
-    await prisma.post.delete({
+    await getPrisma().post.delete({
       where: {
         id: params.id
       }

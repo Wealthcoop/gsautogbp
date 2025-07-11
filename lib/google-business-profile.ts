@@ -1,5 +1,5 @@
 
-import { prisma } from '@/lib/db'
+import { getPrisma } from '@/lib/db'
 
 export interface GoogleBusinessLocation {
   name: string
@@ -122,7 +122,7 @@ export class GoogleBusinessProfileAPI {
 
 export async function getGoogleAccessToken(userId: string): Promise<string | null> {
   try {
-    const account = await prisma.account.findFirst({
+    const account = await getPrisma().account.findFirst({
       where: {
         userId,
         provider: 'google',
@@ -138,7 +138,7 @@ export async function getGoogleAccessToken(userId: string): Promise<string | nul
       const refreshedToken = await refreshGoogleToken(account.refresh_token!)
       if (refreshedToken) {
         // Update the token in the database
-        await prisma.account.update({
+        await getPrisma().account.update({
           where: { id: account.id },
           data: {
             access_token: refreshedToken.access_token,

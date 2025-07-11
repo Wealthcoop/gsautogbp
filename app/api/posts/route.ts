@@ -1,14 +1,14 @@
 
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { getAuthOptions } from '@/lib/auth'
+import { getPrisma } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: Request) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(getAuthOptions())
     
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
       where.type = type.toUpperCase()
     }
 
-    const posts = await prisma.post.findMany({
+    const posts = await getPrisma().post.findMany({
       where,
       include: {
         business: true,
@@ -52,7 +52,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(getAuthOptions())
     
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
 
     // Validate business ownership if businessId is provided
     if (businessId) {
-      const business = await prisma.business.findUnique({
+      const business = await getPrisma().business.findUnique({
         where: { id: businessId },
       })
 
@@ -93,7 +93,7 @@ export async function POST(request: Request) {
       const currentMonth = now.getMonth() + 1
       const currentYear = now.getFullYear()
 
-      const usage = await prisma.usage.findUnique({
+      const usage = await getPrisma().usage.findUnique({
         where: {
           userId_month_year: {
             userId: session.user.id,
@@ -112,7 +112,7 @@ export async function POST(request: Request) {
     }
 
     // Create the post
-    const post = await prisma.post.create({
+    const post = await getPrisma().post.create({
       data: {
         title,
         content,
@@ -139,7 +139,7 @@ export async function POST(request: Request) {
       const currentMonth = now.getMonth() + 1
       const currentYear = now.getFullYear()
 
-      await prisma.usage.upsert({
+      await getPrisma().usage.upsert({
         where: {
           userId_month_year: {
             userId: session.user.id,

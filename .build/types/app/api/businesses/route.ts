@@ -1,4 +1,4 @@
-// File: /home/ubuntu/gold-standard-gbp-app/app/app/api/businesses/route.ts
+// File: /home/ubuntu/gsautogbp/app/api/businesses/route.ts
 import * as entry from '../../../../../app/api/businesses/route.js'
 import type { NextRequest } from 'next/server.js'
 

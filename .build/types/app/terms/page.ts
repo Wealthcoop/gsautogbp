@@ -1,4 +1,4 @@
-// File: /home/ubuntu/gold-standard-gbp-app/app/app/terms/page.tsx
+// File: /home/ubuntu/gsautogbp/app/terms/page.tsx
 import * as entry from '../../../../app/terms/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

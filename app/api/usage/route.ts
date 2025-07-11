@@ -1,14 +1,14 @@
 
 import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/db'
+import { getAuthOptions } from '@/lib/auth'
+import { getPrisma } from '@/lib/db'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(getAuthOptions())
     
     if (!session?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -18,7 +18,7 @@ export async function GET() {
     const currentMonth = now.getMonth() + 1
     const currentYear = now.getFullYear()
 
-    const usage = await prisma.usage.findUnique({
+    const usage = await getPrisma().usage.findUnique({
       where: {
         userId_month_year: {
           userId: session.user.id,
@@ -28,7 +28,7 @@ export async function GET() {
       }
     })
 
-    const user = await prisma.user.findUnique({
+    const user = await getPrisma().user.findUnique({
       where: {
         id: session.user.id
       }
