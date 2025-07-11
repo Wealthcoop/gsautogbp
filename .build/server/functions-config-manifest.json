@@ -1,1 +1,1 @@
-{"version":1,"functions":{"/api/posts/[id]":{},"/api/generate-image":{},"/api/businesses":{},"/api/posts/google":{},"/api/usage":{},"/api/posts":{},"/privacy":{},"/terms":{}}}
+{"version":1,"functions":{"/api/generate-image":{},"/api/businesses":{},"/api/usage":{},"/api/posts/[id]":{},"/api/posts":{},"/api/posts/google":{},"/privacy":{},"/terms":{}}}

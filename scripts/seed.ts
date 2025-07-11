@@ -1,18 +1,26 @@
 
 import { PrismaClient } from '@prisma/client'
+import bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
 async function main() {
   console.log('Seeding database...')
 
-  // Create demo user (for Google OAuth, no password needed)
+  // Create demo user with password for testing email/password authentication
+  // Test credentials: john@doe.com / johndoe123
+  const hashedPassword = await bcrypt.hash('johndoe123', 12)
+  
   const user = await prisma.user.upsert({
     where: { email: 'john@doe.com' },
-    update: {},
+    update: {
+      // Update existing user to include password if it doesn't have one
+      password: hashedPassword,
+    },
     create: {
       name: 'John Doe',
       email: 'john@doe.com',
+      password: hashedPassword,
       plan: 'FREE',
     },
   })
